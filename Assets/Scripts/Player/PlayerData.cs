@@ -6,14 +6,35 @@ using UnityEngine;
 
 public class PlayerData : IEquatable<PlayerData>, INetworkSerializable
 {
-    public bool Equals(PlayerData other)
+    public ulong clientID;
+    public int score;
+    public float lifePoints;
+    public bool playerPlaced;
+
+    public PlayerData(ulong clientID, int score, float lifePoints, bool playerPlaced)
     {
-        throw new NotImplementedException();
+        this.clientID = clientID;
+        this.score = score;
+        this.lifePoints = lifePoints;
+        this.playerPlaced = playerPlaced;
     }
 
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    public bool Equals(PlayerData other)
     {
-        throw new NotImplementedException();
+        return (
+            other.playerPlaced == playerPlaced &&
+            other.lifePoints == lifePoints &&
+            other.score == score &&
+            other.clientID == clientID
+            );
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter 
+    {
+        serializer.SerializeValue(ref clientID);
+        serializer.SerializeValue(ref score);
+        serializer.SerializeValue(ref lifePoints);
+        serializer.SerializeValue(ref playerPlaced);
     }
 
     
